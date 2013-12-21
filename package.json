@@ -1,0 +1,30 @@
+{
+  "name": "tumbler",
+  "version": "0.1.0",
+  "description": "A key/value collection engine built on using objects as keys.",
+  "main": "tumbler.js",
+  "scripts": {
+    "test": "nodeunit tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chipersoft/tumblerjs.git"
+  },
+  "keywords": [
+    "collection",
+    "pattern",
+    "matcher",
+    "object",
+    "property",
+    "json"
+  ],
+  "author": "Jarvis Badgley <chiper@chipersoft.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chipersoft/tumblerjs/issues"
+  },
+  "homepage": "https://github.com/chipersoft/tumblerjs",
+  "devDependencies": {
+    "nodeunit": "~0.8.2"
+  }
+}
