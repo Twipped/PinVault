@@ -153,7 +153,7 @@ exports['Match multiple base keys on single large object'] = function(test){
 	test.done();
 };
 
-exports['Match multiple base keys on single large object'] = function(test){
+exports['Match multiple base keys on single large object, multiple'] = function(test){
 
 	var tumble = tumbler();
 
@@ -165,6 +165,91 @@ exports['Match multiple base keys on single large object'] = function(test){
 	var result = tumble.match({a:1, b:2, c:3});
 
 	test.deepEqual(result, ['DATA1','DATA2','DATA3']);
+
+	test.done();
+};
+
+
+exports['Match on array'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add([1,2,3], 'DATA1');
+
+	var result = tumble.match([1,2,3]);
+
+	test.deepEqual(result, ['DATA1']);
+
+	test.done();
+};
+
+exports['Match on multiple array'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add([1,2], 'DATA1');
+	tumble.add([1,2,3], 'DATA2');
+	tumble.add([1,2,3,4], 'DATA2');
+
+	var result = tumble.match([1,2,3]);
+
+	test.deepEqual(result, ['DATA1', 'DATA2']);
+
+	test.done();
+};
+
+exports['Match on multiple array, part 2'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add([1,2,3,4], 'DATA2');
+	tumble.add([1,2,3], 'DATA2');
+	tumble.add([1,2], 'DATA1');
+
+	var result = tumble.match([1,2,3]);
+
+	test.deepEqual(result, ['DATA1', 'DATA2']);
+
+	test.done();
+};
+
+exports['Match on string'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add('STRING', 'DATA1');
+
+	var result = tumble.match('STRING');
+
+	test.deepEqual(result, ['DATA1']);
+
+	test.done();
+};
+
+exports['Match on string mixed with objects'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add('STRING', 'DATA1');
+	tumble.add({a:1}, 'DATA2');
+
+	var result = tumble.match('STRING');
+
+	test.deepEqual(result, ['DATA1']);
+
+	test.done();
+};
+
+exports['Match on string mixed with objects, part 2'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add({a:1}, 'DATA2');
+	tumble.add('STRING', 'DATA1');
+
+	var result = tumble.match('STRING');
+
+	test.deepEqual(result, ['DATA1']);
 
 	test.done();
 };
