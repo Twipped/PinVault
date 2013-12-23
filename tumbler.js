@@ -47,7 +47,9 @@
 				// under an [object Object] branch so that we can perform submatches
 				if (typeof value === 'object') {
 					trunk = grabBranch(trunk, uniqueKeys.object);
-					trunk.subtree = { branches: {} };
+					if (!trunk.subtree) {
+						trunk.subtree = { branches: {} };
+					}
 					store(value, data, trunk.subtree, originalPattern);
 				} else {
 					trunk = grabBranch(trunk, value);
