@@ -80,6 +80,123 @@
 
 		}
 
+		function purge(pattern, root, originalPattern, data) {
+			// console.log(arguments);
+			var count = 0;
+
+			//if the pattern is not an object, cast it to a string and wrap it in an object under a unique key name
+			if (typeof pattern !== 'object') {
+				var wrapper = {};
+				wrapper[uniqueKeys.string] = String(pattern);
+				pattern = wrapper;
+			}
+
+			var keys = Object.keys(pattern).sort();
+
+			//arrays get their own root leaf to distinguish from plain objects
+			if (Array.isArray(pattern)) {
+				if (root.branches[uniqueKeys.array]) {
+					root = root.branches[uniqueKeys.array];
+				} else {
+					//collection does not contain any arrays, we have no matches
+					return matches;
+				}
+			}
+
+			function climb(trunk, keys) {
+				// if we have nothing to match at this level, return to previous level
+				if (!keys.length) {
+					return;
+				}
+				
+				var key = keys[0];
+				var value = pattern[key];
+				
+				//if the current trunk has a branch matching our current key, climb into that branch
+				if (trunk.branches[key]) {
+					var kbranch = trunk.branches[key];
+					var vbranch, subcount;
+
+					// if this key has a wildcard match, use it
+					if (typeof value === 'object') {
+						if (!!kbranch.branches[uniqueKeys.object] && kbranch.branches[uniqueKeys.object].subtree) {
+							subcount = purge(value, kbranch.branches[uniqueKeys.object].subtree, originalPattern, data);
+
+							vbranch = kbranch.branches[uniqueKeys.object];
+							count += subcount;
+						}
+
+					// now see if the string of the value matches
+					} else if (!!kbranch.branches[String(value)]) {
+						vbranch = kbranch.branches[String(value)];
+					}
+
+					// if we have a value branch, react to it, otherwise continue on
+					if (vbranch) {
+
+						// if data exists on the value branch, add it to the stack
+						if (vbranch.pattern == originalPattern) {
+							if (data !== undefined) {
+								var filtered = vbranch.data.filter(function (d) { return d.data !== data; });
+								count += vbranch.data.length - filtered.length;
+								vbranch.data = filtered;
+							}
+
+							if (data === undefined || !vbranch.data.length) {
+								count += vbranch.data.length;
+								delete vbranch.data;
+								delete vbranch.pattern;
+							}
+						} else {
+
+							//continue to next level in the tree
+							climb(vbranch, keys.slice(1));
+
+						}
+
+						if (vbranch.subtree && !Object.keys(vbranch.subtree.branches).length && vbranch.subtree.data === undefined && vbranch.subtree.pattern === undefined) {
+							delete vbranch.subtree;
+						}
+
+						//clean up any empty branches
+						if (!Object.keys(vbranch.branches).length && vbranch.data === undefined && vbranch.pattern === undefined && vbranch.subtree === undefined) {
+							if (typeof value === 'object') {
+								delete kbranch.branches[uniqueKeys.object];
+							} else {
+								delete kbranch.branches[String(value)];
+							}
+						}
+					}
+
+					if (!Object.keys(kbranch.branches).length && kbranch.data === undefined && kbranch.pattern === undefined) {
+						delete trunk.branches[key];
+					}
+				}
+			}
+
+			//if pattern is an empty object
+			if (!keys.length && root.pattern == originalPattern) {
+				if (data !== undefined) {
+					var filtered = root.data.filter(function (d) { return d.data !== data; });
+					count += root.data.length - filter.length;
+					root.data = filtered;
+				}
+
+				if (data === undefined || !root.data.length) {
+					count += root.data.length;
+					delete root.data;
+					delete root.pattern;
+				}
+			} else {
+
+				climb(root, keys);
+
+			}
+
+			return count;
+		}
+
+
 		function match(pattern, root) {
 			var matches = [];
 
@@ -111,7 +228,7 @@
 				var key = keys[0];
 				var value = pattern[key];
 
-				//if the current trunk has a branch matching our current key with the value or a wildcard value, climb into that branch before moving on
+				//if the current trunk has a branch matching our current key, climb into that branch
 				if (trunk.branches[key]) {
 					var kbranch = trunk.branches[key];
 					var vbranch, submatches;
@@ -199,8 +316,10 @@
 				store(pattern, data, seed, typeof pattern === 'function' ? String(pattern) : JSON.stringify(pattern));
 				return this;
 			},
-			remove: function () {
-				return this;
+			remove: function (pattern, data, howMany) {
+				var jsonPattern = typeof pattern === 'function' ? String(pattern) : JSON.stringify(pattern);
+				var count = purge(pattern, seed, jsonPattern, data);
+				return howMany ? count : this;
 			},
 			get: function (pattern, all) {
 				return getFromSeed(pattern, all);
