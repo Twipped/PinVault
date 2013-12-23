@@ -40,7 +40,7 @@
 
 				currentTrunk = grabBranch(currentTrunk, key);
 
-				// if we find another object as the value, we need to create a new subtree 
+				// if we find another object as the value, we need to create a new subtree
 				// under an [object Object] branch so that we can perform submatches
 				if (typeof value === 'object') {
 					currentTrunk = grabBranch(currentTrunk, uniqueKeys.object);
@@ -62,7 +62,10 @@
 			step();
 
 			//once the recursion ends, currentTrunk should contain the destination of our stored data
-			currentTrunk.data = data;
+			//but we don't want to store it if that branch has a subtree (object within object)
+			if (!currentTrunk.subtree) {
+				currentTrunk.data = data;
+			}
 
 		}
 
@@ -100,12 +103,30 @@
 
 				//if the current trunk has a branch matching our current key with the value or a wildcard value, descend into that branch before moving on
 				if (trunk.branches[key]) {
-					var branch = trunk.branches[key];
-					if ((branch = branch.branches[value] || branch.branches['*'])) {
-						if (branch.data !== undefined) {
-							matches.push(branch.data);
+					var kbranch = trunk.branches[key];
+					var vbranch, submatches;
+
+					if (!!kbranch.branches['*']) {
+						vbranch = kbranch.branches['*'];
+					} else if (typeof value === 'object') {
+						if (!!kbranch.branches[uniqueKeys.object] && kbranch.branches[uniqueKeys.object].subtree) {
+							submatches = match(value, kbranch.branches[uniqueKeys.object].subtree);
+							if (submatches.length) {
+								vbranch = kbranch.branches[uniqueKeys.object];
+							}
 						}
-						descend(branch, keys.slice(1));
+					} else if (!!kbranch.branches[String(value)]) {
+						vbranch = kbranch.branches[String(value)];
+					}
+					
+					if (vbranch) {
+						if (submatches) {
+							matches = matches.concat(submatches);
+						}
+						if (vbranch.data !== undefined && (!submatches || submatches.length)) {
+							matches.push(vbranch.data);
+						}
+						descend(vbranch, keys.slice(1));
 					}
 				}
 

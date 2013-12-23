@@ -226,6 +226,19 @@ exports['Match on string'] = function(test){
 	test.done();
 };
 
+exports['Non-Match on string'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add('STRING', 'DATA1');
+
+	var result = tumble.match('STRINGS');
+
+	test.deepEqual(result, []);
+
+	test.done();
+};
+
 exports['Match on string mixed with objects'] = function(test){
 
 	var tumble = tumbler();
@@ -250,6 +263,47 @@ exports['Match on string mixed with objects, part 2'] = function(test){
 	var result = tumble.match('STRING');
 
 	test.deepEqual(result, ['DATA1']);
+
+	test.done();
+};
+
+exports['Non-Match on string mixed with objects, with empty object'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add({a:1}, 'DATA2');
+	tumble.add('STRING', 'DATA1');
+
+	var result = tumble.match({});
+
+	test.deepEqual(result, []);
+
+	test.done();
+};
+
+exports['Match on object with nested object'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add({b: {a: 1}}, 'DATA1');
+
+	var result = tumble.match({a:1, b: {a: 1}});
+
+	test.deepEqual(result, ['DATA1']);
+
+	test.done();
+};
+
+
+exports['Non-Match on object with nested object'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add({b: {a: 1}}, 'DATA1');
+
+	var result = tumble.match({a:1, b: {a: 2}});
+
+	test.deepEqual(result, []);
 
 	test.done();
 };

@@ -184,7 +184,6 @@ exports['Store pattern with an object'] = function (test) {
 			a: {
 				branches: {
 					'%[Object]%': {
-						data: 'DATA',
 						branches: {},
 						subtree: {
 							branches: {
