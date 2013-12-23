@@ -24,9 +24,8 @@ exports['Store empty pattern'] = function (test) {
 	tumble.add({}, 'DATA');
 
 	test.deepEqual(tumble.dump(), {
-		data: 'DATA',
+		data: [{data:'DATA', index: 0}],
 		pattern: '{}',
-		index: 0,
 		branches: {
 
 		}
@@ -45,9 +44,8 @@ exports['Store single item pattern'] = function (test) {
 			a: {
 				branches: {
 					1: {
-						data: 'DATA',
+						data: [{data:'DATA', index: 0}],
 						pattern: '{"a":1}',
-						index: 0,
 						branches: {}
 					}
 				}
@@ -65,15 +63,13 @@ exports['Store empty pattern and non-empty pattern'] = function (test) {
 	tumble.add({a:1}, 'DATA');
 
 	test.deepEqual(tumble.dump(), {
-		data: 'DATA',
-		index: 0,
+		data: [{data:'DATA', index: 0}],
 		pattern: '{}',
 		branches: {
 			a: {
 				branches: {
 					1: {
-						data: 'DATA',
-						index: 1,
+						data: [{data:'DATA', index: 1}],
 						pattern: '{"a":1}',
 						branches: {}
 					}
@@ -99,8 +95,7 @@ exports['Store multiple item pattern'] = function (test) {
 							b: {
 								branches: {
 									foo: {
-										data: 'DATA',
-										index: 0,
+										data: [{data:'DATA', index: 0}],
 										pattern: '{"a":1,"b":"foo"}',
 										branches: {}
 									}
@@ -133,16 +128,14 @@ exports['Store multiple patterns'] = function (test) {
 								branches: {
 									'2': {
 										branches: {},
-										data: 'DATA2',
-										pattern: '{"a":1,"b":2}',
-										index: 1
+										data: [{data:'DATA2', index: 1}],
+										pattern: '{"a":1,"b":2}'
 									}
 								}
 							}
 						},
-						data: 'DATA1',
-						pattern: '{"a":1}',
-						index: 0
+						data: [{data:'DATA1', index: 0}],
+						pattern: '{"a":1}'
 					}
 				}
 			},
@@ -150,9 +143,8 @@ exports['Store multiple patterns'] = function (test) {
 				branches: {
 					'2': {
 						branches: {},
-						data: 'DATA3',
-						pattern: '{"b":2}',
-						index: 2
+						data: [{data:'DATA3', index: 2}],
+						pattern: '{"b":2}'
 					}
 				}
 			}
@@ -174,9 +166,8 @@ exports['Store pattern with a function'] = function (test) {
 			a: {
 				branches: {
 					'function () {return 10;}': {
-						data: 'DATA',
+						data: [{data:'DATA', index: 0}],
 						branches: {},
-						index: 0,
 						pattern: '{}'
 					}
 				}
@@ -213,8 +204,7 @@ exports['Store pattern with an object'] = function (test) {
 													branches: {
 														10: {
 															branches: {},
-															data: 'DATA',
-															index: 0,
+															data: [{data:'DATA', index: 0}],
 															pattern: '{"a":{"key":1,"value":10}}'
 														}
 													}
@@ -244,9 +234,8 @@ exports['Store with string'] = function (test) {
 			'%[String]%': {
 				branches: {
 					'STRING': {
-						data: 'DATA',
+						data: [{data:'DATA', index: 0}],
 						branches: {},
-						index: 0,
 						pattern: '"STRING"'
 					}
 				}
@@ -267,9 +256,8 @@ exports['Store with integer'] = function (test) {
 			'%[String]%': {
 				branches: {
 					'15': {
-						data: 'DATA',
+						data: [{data:'DATA', index: 0}],
 						branches: {},
-						index: 0,
 						pattern: '15'
 					}
 				}
@@ -290,9 +278,8 @@ exports['Store with float'] = function (test) {
 			'%[String]%': {
 				branches: {
 					'1.5': {
-						data: 'DATA',
+						data: [{data:'DATA', index: 0}],
 						branches: {},
-						index: 0,
 						pattern: '1.5'
 					}
 				}
@@ -313,9 +300,8 @@ exports['Store with function'] = function (test) {
 			'%[String]%': {
 				branches: {
 					'function () {}': {
-						data: 'DATA',
+						data: [{data:'DATA', index: 0}],
 						branches: {},
-						index: 0,
 						pattern: 'function () {}'
 					}
 				}
@@ -342,9 +328,8 @@ exports['Store with array'] = function (test) {
 									1: {
 										branches: {
 											2: {
-												data: 'DATA',
+												data: [{data:'DATA', index: 0}],
 												pattern: '[1,2]',
-												index: 0,
 												branches: {}
 											}
 										}

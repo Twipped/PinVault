@@ -67,9 +67,13 @@
 			//once the recursion ends, trunk should contain the destination of our stored data
 			//but we don't want to store it if that branch has a subtree (object within object)
 			if (!trunk.subtree) {
-				trunk.data = data;
+				lastIndex++;
+				if (trunk.data) {
+					trunk.data.push({data: data, index: lastIndex});
+				} else {
+					trunk.data = [{data: data, index: lastIndex}];
+				}
 				trunk.pattern = originalPattern;
-				trunk.index = ++lastIndex;
 			}
 
 		}
@@ -96,7 +100,8 @@
 				}
 			}
 
-			function descend(trunk, keys, depth) {
+			function climb(trunk, keys, depth) {
+				// if we have nothing to match at this level, return to previous level
 				if (!keys.length) {
 					return;
 				}
@@ -104,13 +109,16 @@
 				var key = keys[0];
 				var value = pattern[key];
 
-				//if the current trunk has a branch matching our current key with the value or a wildcard value, descend into that branch before moving on
+				//if the current trunk has a branch matching our current key with the value or a wildcard value, climb into that branch before moving on
 				if (trunk.branches[key]) {
 					var kbranch = trunk.branches[key];
 					var vbranch, submatches;
 
+					// if this key has a wildcard match, use it
 					if (!!kbranch.branches['*']) {
 						vbranch = kbranch.branches['*'];
+
+					// if the value is an object, look for an object match
 					} else if (typeof value === 'object') {
 						if (!!kbranch.branches[uniqueKeys.object] && kbranch.branches[uniqueKeys.object].subtree) {
 							submatches = match(value, kbranch.branches[uniqueKeys.object].subtree);
@@ -118,28 +126,44 @@
 								vbranch = kbranch.branches[uniqueKeys.object];
 							}
 						}
+
+					// now see if the string of the value matches
 					} else if (!!kbranch.branches[String(value)]) {
 						vbranch = kbranch.branches[String(value)];
 					}
 					
+					// if we have a value branch, react to it, otherwise continue on
 					if (vbranch) {
+						// if submatches were found on an object subtree, add them to the stack
 						if (submatches) {
 							matches = matches.concat(submatches);
 						}
-						if (vbranch.data !== undefined && (!submatches || submatches.length)) {
-							matches.push({data: vbranch.data, specificity: depth, index: vbranch.index, pattern: vbranch.pattern});
+
+						// if data exists on the value branch, add it to the stack
+						if (vbranch.data && (!submatches || submatches.length)) {
+							vbranch.data.forEach(function (dataSet) {
+								matches.push({data: dataSet.data, specificity: depth, index: dataSet.index, pattern: vbranch.pattern});
+							});
 						}
-						descend(vbranch, keys.slice(1), depth + 1);
+
+						//continue to next level in the tree
+						climb(vbranch, keys.slice(1), depth + 1);
 					}
 				}
 
-				descend(trunk, keys.slice(1), depth);
+				// continue with next key at this level
+				climb(trunk, keys.slice(1), depth);
 			}
 
-			if (root.data !== undefined) {
-				matches.push({data: root.data, specificity: 0, index: root.index, pattern: root.pattern});
+			// if there are any patterns at the base of the tree (empty object pattern), add those first.
+			if (root.data) {
+				root.data.forEach(function (dataSet) {
+					matches.push({data: dataSet.data, specificity: 0, index: dataSet.index, pattern: root.pattern});
+				});
 			}
-			descend(root, keys, 1);
+
+			//start climbind the tree.
+			climb(root, keys, 1);
 
 			return matches;
 		}

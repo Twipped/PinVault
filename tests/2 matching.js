@@ -342,4 +342,31 @@ exports['Get - single'] = function(test){
 	test.done();
 };
 
+exports['Get - single, multiple values'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add({a:1, b:2}, 'DATA1');
+	tumble.add({a:1, b:2}, 'DATA2');
+
+	var result = tumble.getData({a:1, b:2});
+
+	test.deepEqual(result, 'DATA2');
+
+	test.done();
+};
+
+exports['Get - multiple values'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add({a:1, b:2}, 'DATA1');
+	tumble.add({a:1, b:2}, 'DATA2');
+
+	var result = tumble.getData({a:1, b:2}, true);
+
+	test.deepEqual(result, ['DATA1', 'DATA2']);
+
+	test.done();
+};
 
