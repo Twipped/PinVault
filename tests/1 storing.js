@@ -25,10 +25,12 @@ exports['Store empty pattern'] = function (test) {
 
 	test.deepEqual(tumble.dump(), {
 		data: 'DATA',
+		pattern: '{}',
+		index: 0,
 		branches: {
 
 		}
-	}, 'Storage Tree Matched Expectations');
+	});
 
 	test.done();
 };
@@ -44,12 +46,14 @@ exports['Store single item pattern'] = function (test) {
 				branches: {
 					1: {
 						data: 'DATA',
+						pattern: '{"a":1}',
+						index: 0,
 						branches: {}
 					}
 				}
 			}
 		}
-	}, 'Storage Tree Matched Expectations');
+	});
 
 	test.done();
 };
@@ -62,17 +66,21 @@ exports['Store empty pattern and non-empty pattern'] = function (test) {
 
 	test.deepEqual(tumble.dump(), {
 		data: 'DATA',
+		index: 0,
+		pattern: '{}',
 		branches: {
 			a: {
 				branches: {
 					1: {
 						data: 'DATA',
+						index: 1,
+						pattern: '{"a":1}',
 						branches: {}
 					}
 				}
 			}
 		}
-	}, 'Storage Tree Matched Expectations');
+	});
 
 	test.done();
 };
@@ -92,6 +100,8 @@ exports['Store multiple item pattern'] = function (test) {
 								branches: {
 									foo: {
 										data: 'DATA',
+										index: 0,
+										pattern: '{"a":1,"b":"foo"}',
 										branches: {}
 									}
 								}
@@ -101,7 +111,7 @@ exports['Store multiple item pattern'] = function (test) {
 				}
 			}
 		}
-	}, 'Storage Tree Matched Expectations');
+	});
 
 	test.done();
 };
@@ -123,12 +133,16 @@ exports['Store multiple patterns'] = function (test) {
 								branches: {
 									'2': {
 										branches: {},
-										data: 'DATA2'
+										data: 'DATA2',
+										pattern: '{"a":1,"b":2}',
+										index: 1
 									}
 								}
 							}
 						},
-						data: 'DATA1'
+						data: 'DATA1',
+						pattern: '{"a":1}',
+						index: 0
 					}
 				}
 			},
@@ -136,12 +150,14 @@ exports['Store multiple patterns'] = function (test) {
 				branches: {
 					'2': {
 						branches: {},
-						data: 'DATA3'
+						data: 'DATA3',
+						pattern: '{"b":2}',
+						index: 2
 					}
 				}
 			}
 		}
-	}, 'Storage Tree Matched Expectations');
+	});
 
 	test.done();
 };
@@ -159,12 +175,14 @@ exports['Store pattern with a function'] = function (test) {
 				branches: {
 					'function () {return 10;}': {
 						data: 'DATA',
-						branches: {}
+						branches: {},
+						index: 0,
+						pattern: '{}'
 					}
 				}
 			}
 		}
-	}, 'Storage Tree Matched Expectations');
+	});
 
 	test.done();
 };
@@ -195,7 +213,9 @@ exports['Store pattern with an object'] = function (test) {
 													branches: {
 														10: {
 															branches: {},
-															data: 'DATA'
+															data: 'DATA',
+															index: 0,
+															pattern: '{"a":{"key":1,"value":10}}'
 														}
 													}
 												}
@@ -209,7 +229,7 @@ exports['Store pattern with an object'] = function (test) {
 				}
 			}
 		}
-	}, 'Storage Tree Matched Expectations');
+	});
 
 	test.done();
 };
@@ -225,12 +245,14 @@ exports['Store with string'] = function (test) {
 				branches: {
 					'STRING': {
 						data: 'DATA',
-						branches: {}
+						branches: {},
+						index: 0,
+						pattern: '"STRING"'
 					}
 				}
 			}
 		}
-	}, 'Storage Tree Matched Expectations');
+	});
 
 	test.done();
 };
@@ -246,12 +268,14 @@ exports['Store with integer'] = function (test) {
 				branches: {
 					'15': {
 						data: 'DATA',
-						branches: {}
+						branches: {},
+						index: 0,
+						pattern: '15'
 					}
 				}
 			}
 		}
-	}, 'Storage Tree Matched Expectations');
+	});
 
 	test.done();
 };
@@ -267,12 +291,14 @@ exports['Store with float'] = function (test) {
 				branches: {
 					'1.5': {
 						data: 'DATA',
-						branches: {}
+						branches: {},
+						index: 0,
+						pattern: '1.5'
 					}
 				}
 			}
 		}
-	}, 'Storage Tree Matched Expectations');
+	});
 
 	test.done();
 };
@@ -288,12 +314,14 @@ exports['Store with function'] = function (test) {
 				branches: {
 					'function () {}': {
 						data: 'DATA',
-						branches: {}
+						branches: {},
+						index: 0,
+						pattern: 'function () {}'
 					}
 				}
 			}
 		}
-	}, 'Storage Tree Matched Expectations');
+	});
 
 	test.done();
 };
@@ -315,6 +343,8 @@ exports['Store with array'] = function (test) {
 										branches: {
 											2: {
 												data: 'DATA',
+												pattern: '[1,2]',
+												index: 0,
 												branches: {}
 											}
 										}
@@ -326,7 +356,7 @@ exports['Store with array'] = function (test) {
 				}
 			}
 		}
-	}, 'Storage Tree Matched Expectations');
+	});
 
 	test.done();
 };

@@ -10,11 +10,14 @@
 			object: '%[Object]%'
 		};
 
-		var mainRoot = {
+		var seed = {
 			branches: {}
 		};
 
-		function store(pattern, data, root) {
+		var length = 0;
+		var lastIndex = -1;
+
+		function store(pattern, data, root, originalPattern) {
 			//if the pattern is not an object, cast it to a string and wrap it in an object under a unique key name
 			if (typeof pattern !== 'object') {
 				var wrapper = {};
@@ -26,7 +29,7 @@
 			var keyLast = keys.length - 1;
 			var keyIndex = -1;
 
-			var currentTrunk = root;
+			var trunk = root;
 
 			function grabBranch(branch, leaf) { return branch.branches[leaf] || (branch.branches[leaf] = { branches: {} }); }
 
@@ -38,16 +41,16 @@
 				var key = keys[keyIndex];
 				var value = pattern[key];
 
-				currentTrunk = grabBranch(currentTrunk, key);
+				trunk = grabBranch(trunk, key);
 
 				// if we find another object as the value, we need to create a new subtree
 				// under an [object Object] branch so that we can perform submatches
 				if (typeof value === 'object') {
-					currentTrunk = grabBranch(currentTrunk, uniqueKeys.object);
-					currentTrunk.subtree = { branches: {} };
-					store(value, data, currentTrunk.subtree);
+					trunk = grabBranch(trunk, uniqueKeys.object);
+					trunk.subtree = { branches: {} };
+					store(value, data, trunk.subtree, originalPattern);
 				} else {
-					currentTrunk = grabBranch(currentTrunk, value);
+					trunk = grabBranch(trunk, value);
 				}
 
 				step();
@@ -55,16 +58,18 @@
 
 			//arrays get their own root leaf to distinguish from plain objects
 			if (Array.isArray(pattern)) {
-				currentTrunk = grabBranch(currentTrunk, uniqueKeys.array);
+				trunk = grabBranch(trunk, uniqueKeys.array);
 			}
 
 			//kick off the recursion
 			step();
 
-			//once the recursion ends, currentTrunk should contain the destination of our stored data
+			//once the recursion ends, trunk should contain the destination of our stored data
 			//but we don't want to store it if that branch has a subtree (object within object)
-			if (!currentTrunk.subtree) {
-				currentTrunk.data = data;
+			if (!trunk.subtree) {
+				trunk.data = data;
+				trunk.pattern = originalPattern;
+				trunk.index = ++lastIndex;
 			}
 
 		}
@@ -81,19 +86,17 @@
 
 			var keys = Object.keys(pattern).sort();
 
-			var currentTrunk = root;
-
 			//arrays get their own root leaf to distinguish from plain objects
 			if (Array.isArray(pattern)) {
-				if (currentTrunk.branches[uniqueKeys.array]) {
-					currentTrunk = currentTrunk.branches[uniqueKeys.array];
+				if (root.branches[uniqueKeys.array]) {
+					root = root.branches[uniqueKeys.array];
 				} else {
 					//collection does not contain any arrays, we have no matches
 					return matches;
 				}
 			}
 
-			function descend(trunk, keys) {
+			function descend(trunk, keys, depth) {
 				if (!keys.length) {
 					return;
 				}
@@ -124,29 +127,69 @@
 							matches = matches.concat(submatches);
 						}
 						if (vbranch.data !== undefined && (!submatches || submatches.length)) {
-							matches.push(vbranch.data);
+							matches.push({data: vbranch.data, specificity: depth, index: vbranch.index, pattern: vbranch.pattern});
 						}
-						descend(vbranch, keys.slice(1));
+						descend(vbranch, keys.slice(1), depth + 1);
 					}
 				}
 
-				descend(trunk, keys.slice(1));
+				descend(trunk, keys.slice(1), depth);
 			}
 
-			if (currentTrunk.data !== undefined) {
-				matches.push(currentTrunk.data);
+			if (root.data !== undefined) {
+				matches.push({data: root.data, specificity: 0, index: root.index, pattern: root.pattern});
 			}
-			descend(currentTrunk, keys);
+			descend(root, keys, 1);
 
 			return matches;
 		}
 
+		function matchFromSeed(pattern) {
+			return match(pattern, seed)
+				.sort(function (a, b) {
+					if (a.specificity > b.specificity) return -1;
+					if (a.specificity < b.specificity) return 1;
+
+					if (a.index > b.index) return 1;
+					if (a.index < b.index) return -1;
+
+					if (a.data > b.data) return 1;
+					if (a.data < b.data) return -1;
+
+					return 0;
+				});
+		}
+
+		function getFromSeed(pattern, all) {
+			var matches = matchFromSeed(pattern);
+			var jsonPattern = typeof pattern === 'function' ? String(pattern) : JSON.stringify(pattern);
+			matches = matches.filter(function (d) { return d.pattern === jsonPattern; });
+			return all ? matches : matches.pop();
+		}
+
 		return {
-			add: function (pattern, data) { store(pattern, data, mainRoot); return this; },
-			remove: function () {return this;},
-			get: function () {return this;},
-			match: function (pattern) {return match(pattern, mainRoot);},
-			dump: function () { return mainRoot; }
+			add: function (pattern, data) {
+				this.length = ++length;
+				store(pattern, data, seed, typeof pattern === 'function' ? String(pattern) : JSON.stringify(pattern));
+				return this;
+			},
+			remove: function () {
+				return this;
+			},
+			get: function (pattern, all) {
+				return getFromSeed(pattern, all);
+			},
+			getData: function (pattern, all) {
+				var result = getFromSeed(pattern, all);
+				return all ? result.map(function (d) {return d.data;}) : result && result.data || undefined;
+			},
+			match: function (pattern) {
+				return matchFromSeed(pattern);
+			},
+			matchData: function (pattern) {
+				return matchFromSeed(pattern).map(function (d) {return d.data;});
+			},
+			dump: function () { return seed; }
 		};
 
 	};
