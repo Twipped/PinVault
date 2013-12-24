@@ -289,15 +289,16 @@
 		function matchFromSeed(pattern) {
 			var matches = match(pattern, seed);
 
-			var lookup = {};
-			matches = matches.filter(function (d) {
-				var hash = d.pattern + '|' + String(d.data);
-				if (lookup[hash] !== undefined) {
-					return false;
-				}
-				lookup[hash] = true;
-				return true;
-			});
+			/* commenting this out for now so that the tests continue to fail. This is the wrong way to address this */
+			// var lookup = {};
+			// matches = matches.filter(function (d) {
+			// 	var hash = d.pattern + '|' + String(d.data);
+			// 	if (lookup[hash] !== undefined) {
+			// 		return false;
+			// 	}
+			// 	lookup[hash] = true;
+			// 	return true;
+			// });
 
 			matches.sort(function (a, b) {
 				if (a.specificity > b.specificity) return -1;

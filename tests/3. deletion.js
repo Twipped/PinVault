@@ -271,11 +271,11 @@ exports['Delete complex key'] = function(test){
 	var tumble = tumbler();
 
 	tumble.add({a:1}, 'DATA1');
-	tumble.add({a:1, c: {d: 10}}, 'DATA2');
+	tumble.add({a:1, c: {d: 10}, e:4}, 'DATA2');
 	tumble.add({a:1}, 'DATA4');
 	tumble.add({b:1}, 'DATA5');
 
-	var count = tumble.remove({a:1, c: {d: 10}}, undefined, true);
+	var count = tumble.remove({a:1, c: {d: 10}, e:4}, undefined, true);
 	var tree = tumble.dump();
 
 	test.strictEqual(count, 1);
