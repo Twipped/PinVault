@@ -287,19 +287,22 @@
 		}
 
 		function matchFromSeed(pattern) {
-			return match(pattern, seed)
-				.sort(function (a, b) {
-					if (a.specificity > b.specificity) return -1;
-					if (a.specificity < b.specificity) return 1;
+			var matches = match(pattern, seed);
 
-					if (a.index > b.index) return 1;
-					if (a.index < b.index) return -1;
+			matches.sort(function (a, b) {
+				if (a.specificity > b.specificity) return -1;
+				if (a.specificity < b.specificity) return 1;
 
-					if (a.data > b.data) return 1;
-					if (a.data < b.data) return -1;
+				if (a.index > b.index) return 1;
+				if (a.index < b.index) return -1;
 
-					return 0;
-				});
+				if (a.data > b.data) return 1;
+				if (a.data < b.data) return -1;
+
+				return 0;
+			});
+
+			return matches;
 		}
 
 		function getFromSeed(pattern, all) {
