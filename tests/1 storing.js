@@ -263,6 +263,49 @@ exports['Store multiple patterns with an object'] = function (test) {
 	test.done();
 };
 
+exports['Store pattern with an object, part 2'] = function (test) {
+	test.expect(1);
+	var tumble = tumbler();
+	tumble.add({a: { key: 1 }, b:2}, 'DATA1');
+
+	test.deepEqual(tumble.dump(), {
+		branches: {
+					a: {
+						branches: {
+							'%[Object]%': {
+								branches: {
+									b: {
+										branches: {
+											2: {
+												branches: {},
+												data: [{data:'DATA1', index: 0}],
+												pattern: '{"a":{"key":1},"b":2}'
+											}
+										}
+									}
+								},
+								subtree: {
+									branches: {
+										key: {
+											branches: {
+												1: {
+													branches: {},
+													data: [{data:'DATA1', index: 0}],
+													pattern: '{"a":{"key":1},"b":2}'
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+	});
+
+	test.done();
+};
+
 exports['Store with string'] = function (test) {
 	test.expect(1);
 	var tumble = tumbler();

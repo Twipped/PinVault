@@ -289,6 +289,16 @@
 		function matchFromSeed(pattern) {
 			var matches = match(pattern, seed);
 
+			var lookup = {};
+			matches = matches.filter(function (d) {
+				var hash = d.pattern + '|' + String(d.data);
+				if (lookup[hash] !== undefined) {
+					return false;
+				}
+				lookup[hash] = true;
+				return true;
+			});
+
 			matches.sort(function (a, b) {
 				if (a.specificity > b.specificity) return -1;
 				if (a.specificity < b.specificity) return 1;
@@ -303,6 +313,7 @@
 			});
 
 			return matches;
+
 		}
 
 		function getFromSeed(pattern, all) {

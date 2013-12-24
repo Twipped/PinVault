@@ -294,6 +294,19 @@ exports['Match on object with nested object'] = function(test){
 	test.done();
 };
 
+exports['Match on object with nested object, part 2'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add({b: {a: 1}, c: 2}, 'DATA1');
+
+	var result = tumble.matchData({a:1, b: {a: 1}, c:2, d:3});
+
+	test.deepEqual(result, ['DATA1']);
+
+	test.done();
+};
+
 
 exports['Non-Match on object with nested object'] = function(test){
 
