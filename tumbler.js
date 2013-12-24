@@ -69,7 +69,6 @@
 			//once the recursion ends, trunk should contain the destination of our stored data
 			//but we don't want to store it if that branch has a subtree (object within object)
 			if (!trunk.subtree) {
-				lastIndex++;
 				if (trunk.data) {
 					trunk.data.push({data: data, index: lastIndex});
 				} else {
@@ -313,6 +312,7 @@
 		return {
 			add: function (pattern, data) {
 				this.length = ++length;
+				lastIndex++;
 				store(pattern, data, seed, typeof pattern === 'function' ? String(pattern) : JSON.stringify(pattern));
 				return this;
 			},
