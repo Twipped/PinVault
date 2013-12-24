@@ -319,6 +319,7 @@
 			remove: function (pattern, data, howMany) {
 				var jsonPattern = typeof pattern === 'function' ? String(pattern) : JSON.stringify(pattern);
 				var count = purge(pattern, seed, jsonPattern, data);
+				this.length -= count;
 				return howMany ? count : this;
 			},
 			get: function (pattern, all) {
