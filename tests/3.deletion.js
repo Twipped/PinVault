@@ -311,44 +311,81 @@ exports['Delete one complex key from tree with multiple complex keys'] = functio
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({a:1, c: {d: 10}}, 'DATA2');
-	tumble.add({a:1, c: {e: 10}}, 'DATA3');
-	tumble.add({a:1}, 'DATA4');
-	tumble.add({b:1}, 'DATA5');
+	tumble.add({a:1, c: {d: 10}, e: 11}, 'DATA3');
+	tumble.add({a:1, c: {e: 10}}, 'DATA4');
+	tumble.add({a:1}, 'DATA5');
+	tumble.add({b:1}, 'DATA6');
 
 	var count = tumble.remove({a:1, c: {d: 10}}, undefined, true);
 	var tree = tumble.dump();
-
-	test.strictEqual(count, 1);
-	test.deepEqual(tree, {
+	var expected = {
 		branches: {
 			a: {
 				branches: {
 					1: {
-						data: [{data:'DATA1', index: 0}, { data: 'DATA4', index: 3 }],
-						pattern: '{"a":1}',
 						branches: {
-							'c': { branches: {
-								'%[Object]%': { branches: {}, subtree: { branches: { e: { branches: { '10': {
-									branches: {},
-									data: [{data:'DATA3', index: 2}],
-									pattern: '{"a":1,"c":{"e":10}}'
-								} }} } } }
-							}}
-						}
+							'c': {
+								branches: {
+									'%[Object]%': {
+										branches: {
+											d: {
+												branches: {
+													'10': {
+														branches: {
+															'%[ObjectEnd]%': {
+																branches: {
+																	e: {
+																		branches: {
+																			'11': {
+																				branches: {},
+																				data: [{data:'DATA3', index: 2}],
+																				pattern: '{"a":1,"c":{"d":10},"e":11}'
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											},
+											e: {
+												branches: {
+													'10': {
+														branches: {
+															'%[ObjectEnd]%': {
+																branches: {},
+																data: [{data:'DATA4', index: 3}],
+																pattern: '{"a":1,"c":{"e":10}}'
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						data: [{data:'DATA1', index: 0}, { data: 'DATA5', index: 4 }],
+						pattern: '{"a":1}'
 					}
 				}
 			},
 			b: {
 				branches: {
 					1: {
-						data: [{data:'DATA5', index: 4}],
-						pattern: '{"b":1}',
-						branches: {}
+						branches: {},
+						data: [{data:'DATA6', index: 5}],
+						pattern: '{"b":1}'
 					}
 				}
 			}
 		}
-	});
+	};
+
+	test.strictEqual(count, 1);
+	test.deepEqual(tree, expected);
 
 	test.done();
 };

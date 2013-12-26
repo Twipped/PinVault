@@ -83,8 +83,9 @@
 		}
 
 		function purge(pattern, root, originalPattern, data) {
-			// console.log(arguments);
 			var count = 0;
+			var keystack = [];
+			var patternstack = [];
 
 			//if the pattern is not an object, cast it to a string and wrap it in an object under a unique key name
 			if (typeof pattern !== 'object') {
@@ -106,8 +107,41 @@
 			}
 
 			function climb(trunk, keys) {
+				var filtered;
+
 				// if we have nothing to match at this level, return to previous level
 				if (!keys.length) {
+					var obranch;
+					if ((obranch = trunk.branches[uniqueKeys.objectEnd])) {
+						//return to the previous level's pattern and keys
+						pattern = patternstack.pop();
+
+
+						if (obranch.pattern == originalPattern) {
+							if (data !== undefined) {
+								filtered = obranch.data.filter(function (d) { return d.data !== data; });
+								count += obranch.data.length - filtered.length;
+								obranch.data = filtered;
+							}
+
+							if (data === undefined || !obranch.data.length) {
+								count += obranch.data.length;
+								delete obranch.data;
+								delete obranch.pattern;
+							}
+						} else {
+
+							//continue to next level in the tree
+							climb(obranch, keystack.pop());
+
+						}
+							
+
+						//cleanup empty objectend branches
+						if (!Object.keys(obranch.branches).length && obranch.data === undefined && obranch.pattern === undefined) {
+							delete trunk.branches[uniqueKeys.objectEnd];
+						}
+					}
 					return;
 				}
 				
@@ -121,11 +155,19 @@
 
 					// if this key has a wildcard match, use it
 					if (typeof value === 'object') {
-						if (!!kbranch.branches[uniqueKeys.object] && kbranch.branches[uniqueKeys.object].subtree) {
-							subcount = purge(value, kbranch.branches[uniqueKeys.object].subtree, originalPattern, data);
-
+						if (!!kbranch.branches[uniqueKeys.object]) {
 							vbranch = kbranch.branches[uniqueKeys.object];
-							count += subcount;
+
+							//descend into the subobject, pushing the previous layer to a stack
+							// if (keys.length>1) {
+								keystack.push(keys.slice(1));
+							// }
+							patternstack.push(pattern);
+							pattern = value;
+
+							keys = Object.keys(value).sort();
+							keys.unshift(''); //have to add an extra value at the front, since we slice further down
+
 						}
 
 					// now see if the string of the value matches
@@ -139,7 +181,7 @@
 						// if data exists on the value branch, add it to the stack
 						if (vbranch.pattern == originalPattern) {
 							if (data !== undefined) {
-								var filtered = vbranch.data.filter(function (d) { return d.data !== data; });
+								filtered = vbranch.data.filter(function (d) { return d.data !== data; });
 								count += vbranch.data.length - filtered.length;
 								vbranch.data = filtered;
 							}
@@ -156,12 +198,8 @@
 
 						}
 
-						if (vbranch.subtree && !Object.keys(vbranch.subtree.branches).length && vbranch.subtree.data === undefined && vbranch.subtree.pattern === undefined) {
-							delete vbranch.subtree;
-						}
-
 						//clean up any empty branches
-						if (!Object.keys(vbranch.branches).length && vbranch.data === undefined && vbranch.pattern === undefined && vbranch.subtree === undefined) {
+						if (!Object.keys(vbranch.branches).length && vbranch.data === undefined && vbranch.pattern === undefined) {
 							if (typeof value === 'object') {
 								delete kbranch.branches[uniqueKeys.object];
 							} else {
