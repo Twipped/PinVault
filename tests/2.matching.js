@@ -239,6 +239,58 @@ exports['Non-Match on string'] = function(test){
 	test.done();
 };
 
+exports['Match on boolean'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add(true, 'DATA1');
+
+	var result = tumble.matchData(true);
+
+	test.deepEqual(result, ['DATA1']);
+
+	test.done();
+};
+
+exports['Non-Match on boolean'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add(false, 'DATA1');
+
+	var result = tumble.matchData(true);
+
+	test.deepEqual(result, []);
+
+	test.done();
+};
+
+exports['Match on object with boolean'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add({a: true}, 'DATA1');
+
+	var result = tumble.matchData({a: true});
+
+	test.deepEqual(result, ['DATA1']);
+
+	test.done();
+};
+
+exports['Non-Match on object with boolean'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add({a: false}, 'DATA1');
+
+	var result = tumble.matchData({a: true});
+
+	test.deepEqual(result, []);
+
+	test.done();
+};
+
 exports['Match on string mixed with objects'] = function(test){
 
 	var tumble = tumbler();
