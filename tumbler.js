@@ -201,6 +201,8 @@
 
 		function match(pattern, root) {
 			var matches = [];
+			var keystack = [];
+			var patternstack = [];
 
 			//if the pattern is not an object, cast it to a string and wrap it in an object under a unique key name
 			if (typeof pattern !== 'object') {
@@ -222,8 +224,24 @@
 			}
 
 			function climb(trunk, keys, depth) {
+				
 				// if we have nothing to match at this level, return to previous level
 				if (!keys.length) {
+					var obranch;
+					if ((obranch = trunk.branches[uniqueKeys.objectEnd])) {
+						// if data exists on the value branch, add it to the stack
+						if (obranch.data) {
+							obranch.data.forEach(function (dataSet) {
+								matches.push({data: dataSet.data, specificity: depth, index: dataSet.index, pattern: obranch.pattern});
+							});
+						}
+						
+						//return to the previous level's pattern and keys
+						pattern = patternstack.pop();
+						if (keystack.length) {
+							climb(obranch, keystack.pop(), depth + 1);
+						}
+					}
 					return;
 				}
 
@@ -233,7 +251,7 @@
 				//if the current trunk has a branch matching our current key, climb into that branch
 				if (trunk.branches[key]) {
 					var kbranch = trunk.branches[key];
-					var vbranch, submatches;
+					var vbranch;
 
 					// if this key has a wildcard match, use it
 					if (!!kbranch.branches['*']) {
@@ -241,11 +259,19 @@
 
 					// if the value is an object, look for an object match
 					} else if (typeof value === 'object') {
-						if (!!kbranch.branches[uniqueKeys.object] && kbranch.branches[uniqueKeys.object].subtree) {
-							submatches = match(value, kbranch.branches[uniqueKeys.object].subtree);
-							if (submatches.length) {
-								vbranch = kbranch.branches[uniqueKeys.object];
+						if (!!kbranch.branches[uniqueKeys.object]) {
+							vbranch = kbranch.branches[uniqueKeys.object];
+
+							//descend into the subobject, pushing the previous layer to a stack
+							if (keys.length>1) {
+								keystack.push(keys.slice(1));
 							}
+							patternstack.push(pattern);
+							pattern = value;
+
+							keys = Object.keys(value).sort();
+							keys.unshift(''); //have to add an extra value at the front, since we slice further down
+
 						}
 
 					// now see if the string of the value matches
@@ -255,13 +281,9 @@
 					
 					// if we have a value branch, react to it, otherwise continue on
 					if (vbranch) {
-						// if submatches were found on an object subtree, add them to the stack
-						if (submatches) {
-							matches = matches.concat(submatches);
-						}
 
 						// if data exists on the value branch, add it to the stack
-						if (vbranch.data && (!submatches || submatches.length)) {
+						if (vbranch.data) {
 							vbranch.data.forEach(function (dataSet) {
 								matches.push({data: dataSet.data, specificity: depth, index: dataSet.index, pattern: vbranch.pattern});
 							});
