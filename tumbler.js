@@ -276,9 +276,9 @@
 						
 						//return to the previous level's pattern and keys
 						pattern = patternstack.pop();
-						if (keystack.length) {
-							climb(obranch, keystack.pop(), depth + 1);
-						}
+
+						climb(obranch, keystack.pop(), depth + 1);
+
 					}
 					return;
 				}
@@ -301,12 +301,10 @@
 							vbranch = kbranch.branches[uniqueKeys.object];
 
 							//descend into the subobject, pushing the previous layer to a stack
-							if (keys.length>1) {
-								keystack.push(keys.slice(1));
-							}
 							patternstack.push(pattern);
 							pattern = value;
 
+							keystack.push(keys.slice(1));
 							keys = Object.keys(value).sort();
 							keys.unshift(''); //have to add an extra value at the front, since we slice further down
 
