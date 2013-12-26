@@ -413,7 +413,7 @@ exports['Get - single'] = function(test){
 	tumble.add({a:1, c:3}, 'DATA4');
 	tumble.add({}, 'DATA5');
 
-	var result = tumble.getData({a:1, b:2});
+	var result = tumble.get({a:1, b:2});
 
 	test.deepEqual(result, 'DATA3');
 
@@ -427,7 +427,7 @@ exports['Get - single, multiple values'] = function(test){
 	tumble.add({a:1, b:2}, 'DATA1');
 	tumble.add({a:1, b:2}, 'DATA2');
 
-	var result = tumble.getData({a:1, b:2});
+	var result = tumble.get({a:1, b:2});
 
 	test.deepEqual(result, 'DATA2');
 
@@ -441,7 +441,7 @@ exports['Get - multiple values'] = function(test){
 	tumble.add({a:1, b:2}, 'DATA1');
 	tumble.add({a:1, b:2}, 'DATA2');
 
-	var result = tumble.getData({a:1, b:2}, true);
+	var result = tumble.get({a:1, b:2}, true);
 
 	test.deepEqual(result, ['DATA1', 'DATA2']);
 

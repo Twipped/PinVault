@@ -388,9 +388,6 @@
 				return howMany ? count : this;
 			},
 			get: function (pattern, all) {
-				return getFromSeed(pattern, all);
-			},
-			getData: function (pattern, all) {
 				var result = getFromSeed(pattern, all);
 				return all ? result.map(function (d) {return d.data;}) : result && result.data || undefined;
 			},
