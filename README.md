@@ -2,38 +2,44 @@
 
 A key/value data store built to support using plain objects as keys, with pattern matched retrieval.
 
+#Installation
+
+NPM: `npm install pinvault`
+
+Bower: `bower install pinvault`
+
 ##Usage
 
 In Node or another CommonJS environment:
 
 ```js
 var pinvault = require('pinvault');
-var tstore = pinvault();
+var vault = pinvault();
 ```
 
 In an AMD environment such as RequireJS:
 
 ```js
 require(['pinvault'], function (pinvault) {
-	var tstore = pinvault();
+	var vault = pinvault();
 });
 ```
 
 Loaded directly on a webpage:
 
 ```js
-var tstore = pinvault();
+var vault = pinvault();
 ```
 
 ###pinvault.add(key, value)
 
 ```js
-tstore.add({gender: 'F'}, 1.684);                              //matches any plain object with a "gender" property containing "F"
-tstore.add({address: {zipcode: '95014'}}, 'Cupertino');        //matches any plain object with an "address" property containing a zipcode of 95014
-tstore.add({active: true}, function () { isActive = true; });  //matches any plain object with an "active" property set to true
-tstore.add(function () { var iDontKnowWhyIDidThis = 1; }, 10); //only matches on an identical function (string evaluation)
-tstore.add('StringValue', 0);                                  //only matches on "StringValue"
-tstore.add({foo: '*'}, true);                                  //matches any object containing a 'foo' property, regardless of value
+vault.add({gender: 'F'}, 1.684);                              //matches any plain object with a "gender" property containing "F"
+vault.add({address: {zipcode: '95014'}}, 'Cupertino');        //matches any plain object with an "address" property containing a zipcode of 95014
+vault.add({active: true}, function () { isActive = true; });  //matches any plain object with an "active" property set to true
+vault.add(function () { var iDontKnowWhyIDidThis = 1; }, 10); //only matches on an identical function (string evaluation)
+vault.add('StringValue', 0);                                  //only matches on "StringValue"
+vault.add({foo: '*'}, true);                                  //matches any object containing a 'foo' property, regardless of value
 ```
 
 - key (mixed) - What to store the value under.  Key is intended to be a plain object, but can be any data type in JavaScript.
@@ -56,13 +62,13 @@ Removes the value from the data store using the passed key.  If `value` is omitt
 Searches the collection for all entries whose key matches against the `input`, ordered by specificity descending (closest match first), index ascending (oldest values first).  Returns an array of match detail objects containing the stored `data`, the matched `pattern` used to store the data, `index` order of which it was added, and the `specificity` level of the match.
 
 ```js
-var tstore = pinvault();
-tstore.add({a:1}, 1);
-tstore.add({a:1, b:2}, 2);
-tstore.add({a:1, c:3}, 3);
-tstore.add({a:4, c:3, d:5}, 4);
+var vault = pinvault();
+vault.add({a:1}, 1);
+vault.add({a:1, b:2}, 2);
+vault.add({a:1, c:3}, 3);
+vault.add({a:4, c:3, d:5}, 4);
 
-var result = tstore.match({a:1, b:2, c:3});
+var result = vault.match({a:1, b:2, c:3});
 ```
 
 `result` will contain:

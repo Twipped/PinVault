@@ -1,0 +1,26 @@
+{
+  "name": "pinvault",
+  "version": "0.1.0",
+  "homepage": "https://github.com/ChiperSoft/PinVault",
+  "authors": [
+    "ChiperSoft <chiper@chipersoft.com>"
+  ],
+  "description": "A key-value store with partial-object key matching.",
+  "main": "pinvault.js",
+  "keywords": [
+    "collection",
+    "pattern",
+    "matching",
+    "object",
+    "property",
+    "json"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
