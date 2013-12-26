@@ -391,5 +391,72 @@ exports['Delete one complex key from tree with multiple complex keys'] = functio
 };
 
 
+exports['Delete three level complex key'] = function(test){
 
+	var tumble = tumbler();
+
+	tumble.add({a:1}, 'DATA1');
+	tumble.add({a: {o: {w: 'x'}}}, 'DATA2');
+	tumble.add({a: {o: {w: 'x'}, c: 'q'}}, 'DATA3');
+
+
+	var count = tumble.remove({a: {o: {w: 'x'}}}, undefined, true);
+	var tree = tumble.dump();
+
+	var expected = {
+		branches: {
+			a: {
+				branches: {
+					1:{
+						branches: {},
+						data: [{data: 'DATA1', index: 0}],
+						pattern: '{"a":1}'
+					},
+					'%[Object]%': {
+						branches: {
+							c: {
+								branches: {
+									q: {
+										branches: {
+											o: {
+												branches: {
+													'%[Object]%': {
+														branches: {
+															w: {
+																branches: {
+																	x: {
+																		branches: {
+																			'%[ObjectEnd]%': {
+																				branches: {
+																					'%[ObjectEnd]%': {
+																						branches: {},
+																						data: [{data: "DATA3", index: 2}],
+																						pattern: '{"a":{"o":{"w":"x"},"c":"q"}}'
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	};
+
+	test.strictEqual(count, 1);
+	test.deepEqual(tree, expected);
+
+	test.done();
+};
 
