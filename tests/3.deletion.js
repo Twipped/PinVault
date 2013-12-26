@@ -1,10 +1,10 @@
 
-var tumbler = require('../tumbler');
+var pinvault = require('../pinvault');
 
 
 exports['Delete empty object'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({}, 'DATA');
 
@@ -19,7 +19,7 @@ exports['Delete empty object'] = function(test){
 
 exports['Delete single item object'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA');
 
@@ -34,7 +34,7 @@ exports['Delete single item object'] = function(test){
 
 exports['Delete single item object that was not added'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA');
 
@@ -61,7 +61,7 @@ exports['Delete single item object that was not added'] = function(test){
 
 exports['Delete single item object that was not added, part 2'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA');
 
@@ -89,7 +89,7 @@ exports['Delete single item object that was not added, part 2'] = function(test)
 
 exports['Delete single item on collection with multiple items'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({a:2}, 'DATA2');
@@ -124,7 +124,7 @@ exports['Delete single item on collection with multiple items'] = function(test)
 
 exports['Delete single item on collection with multiple items, part 2'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({a:2}, 'DATA2');
@@ -163,7 +163,7 @@ exports['Delete single item on collection with multiple items, part 2'] = functi
 
 exports['Delete single item on collection with multiple items, part 3'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({a:2}, 'DATA2');
@@ -201,7 +201,7 @@ exports['Delete single item on collection with multiple items, part 3'] = functi
 
 exports['Delete multiple items under same pattern'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({b:1}, 'DATA3');
@@ -230,7 +230,7 @@ exports['Delete multiple items under same pattern'] = function(test){
 
 exports['Delete single item under multiple item pattern'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({b:1}, 'DATA3');
@@ -268,7 +268,7 @@ exports['Delete single item under multiple item pattern'] = function(test){
 
 exports['Delete complex key'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({a:1, c: {d: 10}, e:4}, 'DATA2');
@@ -307,7 +307,7 @@ exports['Delete complex key'] = function(test){
 
 exports['Delete one complex key from tree with multiple complex keys'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({a:1, c: {d: 10}}, 'DATA2');
@@ -393,7 +393,7 @@ exports['Delete one complex key from tree with multiple complex keys'] = functio
 
 exports['Delete three level complex key'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({a: {o: {w: 'x'}}}, 'DATA2');

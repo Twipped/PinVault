@@ -1,13 +1,13 @@
 
-var tumbler = require('../tumbler');
+var pinvault = require('../pinvault');
 
 
-exports['Tumbler initialization'] = function(test){
+exports['initialization'] = function(test){
     test.expect(7);
 
-    test.strictEqual(typeof tumbler, 'function', 'tumbler is a function');
+    test.strictEqual(typeof pinvault, 'function', 'pinvault is a function');
 
-    var tumble = tumbler();
+    var tumble = pinvault();
 
     test.strictEqual(typeof tumble, 'object', 'Generated tumble is an object');
     test.ok(tumble.add, 'Tumble has add function');
@@ -20,7 +20,7 @@ exports['Tumbler initialization'] = function(test){
 
 exports['Store empty pattern'] = function (test) {
 	test.expect(1);
-	var tumble = tumbler();
+	var tumble = pinvault();
 	tumble.add({}, 'DATA');
 
 	test.deepEqual(tumble.dump(), {
@@ -36,7 +36,7 @@ exports['Store empty pattern'] = function (test) {
 
 exports['Store single item pattern'] = function (test) {
 	test.expect(1);
-	var tumble = tumbler();
+	var tumble = pinvault();
 	tumble.add({a:1}, 'DATA');
 
 	test.deepEqual(tumble.dump(), {
@@ -58,7 +58,7 @@ exports['Store single item pattern'] = function (test) {
 
 exports['Store empty pattern and non-empty pattern'] = function (test) {
 	test.expect(1);
-	var tumble = tumbler();
+	var tumble = pinvault();
 	tumble.add({}, 'DATA');
 	tumble.add({a:1}, 'DATA');
 
@@ -83,7 +83,7 @@ exports['Store empty pattern and non-empty pattern'] = function (test) {
 
 exports['Store multiple item pattern'] = function (test) {
 	test.expect(1);
-	var tumble = tumbler();
+	var tumble = pinvault();
 	tumble.add({a:1, b:'foo'}, 'DATA');
 
 	test.deepEqual(tumble.dump(), {
@@ -113,7 +113,7 @@ exports['Store multiple item pattern'] = function (test) {
 
 exports['Store multiple patterns'] = function (test) {
 	test.expect(1);
-	var tumble = tumbler();
+	var tumble = pinvault();
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({a:1, b:2}, 'DATA2');
 	tumble.add({b:2}, 'DATA3');
@@ -156,7 +156,7 @@ exports['Store multiple patterns'] = function (test) {
 
 exports['Store pattern with a function'] = function (test) {
 	test.expect(1);
-	var tumble = tumbler();
+	var tumble = pinvault();
 	tumble.add({
 		a: function () {return 10;}
 	}, 'DATA');
@@ -180,7 +180,7 @@ exports['Store pattern with a function'] = function (test) {
 
 exports['Store pattern with an object'] = function (test) {
 	test.expect(1);
-	var tumble = tumbler();
+	var tumble = pinvault();
 	tumble.add({
 		a: {
 			key: 1,
@@ -227,7 +227,7 @@ exports['Store pattern with an object'] = function (test) {
 
 exports['Store multiple patterns with an object'] = function (test) {
 	test.expect(1);
-	var tumble = tumbler();
+	var tumble = pinvault();
 	tumble.add({a: { key: 1 }}, 'DATA1');
 	tumble.add({a: { key: 2 }}, 'DATA2');
 
@@ -273,7 +273,7 @@ exports['Store multiple patterns with an object'] = function (test) {
 
 exports['Store pattern with an object, part 2'] = function (test) {
 	test.expect(1);
-	var tumble = tumbler();
+	var tumble = pinvault();
 	tumble.add({a: { key: 1 }, b:2}, 'DATA1');
 
 	test.deepEqual(tumble.dump(), {
@@ -315,7 +315,7 @@ exports['Store pattern with an object, part 2'] = function (test) {
 
 exports['Store with string'] = function (test) {
 	test.expect(1);
-	var tumble = tumbler();
+	var tumble = pinvault();
 	tumble.add('STRING', 'DATA');
 
 	test.deepEqual(tumble.dump(), {
@@ -337,7 +337,7 @@ exports['Store with string'] = function (test) {
 
 exports['Store with integer'] = function (test) {
 	test.expect(1);
-	var tumble = tumbler();
+	var tumble = pinvault();
 	tumble.add(15, 'DATA');
 
 	test.deepEqual(tumble.dump(), {
@@ -359,7 +359,7 @@ exports['Store with integer'] = function (test) {
 
 exports['Store with float'] = function (test) {
 	test.expect(1);
-	var tumble = tumbler();
+	var tumble = pinvault();
 	tumble.add(1.5, 'DATA');
 
 	test.deepEqual(tumble.dump(), {
@@ -381,7 +381,7 @@ exports['Store with float'] = function (test) {
 
 exports['Store with function'] = function (test) {
 	test.expect(1);
-	var tumble = tumbler();
+	var tumble = pinvault();
 	tumble.add(function () {}, 'DATA');
 
 	test.deepEqual(tumble.dump(), {
@@ -403,7 +403,7 @@ exports['Store with function'] = function (test) {
 
 exports['Store with array'] = function (test) {
 	test.expect(1);
-	var tumble = tumbler();
+	var tumble = pinvault();
 	tumble.add([1,2], 'DATA');
 
 	test.deepEqual(tumble.dump(), {

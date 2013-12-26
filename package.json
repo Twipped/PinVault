@@ -1,14 +1,14 @@
 {
-  "name": "tumbler",
+  "name": "pinvault",
   "version": "0.1.0",
   "description": "A key-value store with partial-object key matching.",
-  "main": "tumbler.js",
+  "main": "pinvault.js",
   "scripts": {
     "test": "nodeunit tests"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ChiperSoft/TumblerJS.git"
+    "url": "https://github.com/ChiperSoft/PinVault.git"
   },
   "keywords": [
     "collection",
@@ -21,9 +21,9 @@
   "author": "Jarvis Badgley <chiper@chipersoft.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ChiperSoft/TumblerJS/issues"
+    "url": "https://github.com/ChiperSoft/PinVault/issues"
   },
-  "homepage": "https://github.com/ChiperSoft/TumblerJS",
+  "homepage": "https://github.com/ChiperSoft/PinVault",
   "devDependencies": {
     "nodeunit": "~0.8.2"
   }

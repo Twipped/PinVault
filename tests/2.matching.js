@@ -1,10 +1,10 @@
 
-var tumbler = require('../tumbler');
+var pinvault = require('../pinvault');
 
 
 exports['Match empty object with empty object'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({}, 'DATA');
 
@@ -17,7 +17,7 @@ exports['Match empty object with empty object'] = function(test){
 
 exports['Match empty object with non-empty object'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({}, 'DATA1');
 
@@ -30,7 +30,7 @@ exports['Match empty object with non-empty object'] = function(test){
 
 exports['Match empty object and non-empty object with non-empty object'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({}, 'DATA1');
 	tumble.add({a:1}, 'DATA2');
@@ -45,7 +45,7 @@ exports['Match empty object and non-empty object with non-empty object'] = funct
 
 exports['Match non-empty object with empty object'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA2');
 
@@ -58,7 +58,7 @@ exports['Match non-empty object with empty object'] = function(test){
 
 exports['Match simple object with simple object'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 
@@ -71,7 +71,7 @@ exports['Match simple object with simple object'] = function(test){
 
 exports['Match simple object with simple object, different values - part 1'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({a:2}, 'DATA2');
@@ -85,7 +85,7 @@ exports['Match simple object with simple object, different values - part 1'] = f
 
 exports['Match simple object with simple object, different values - part 2'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({a:2}, 'DATA2');
@@ -99,7 +99,7 @@ exports['Match simple object with simple object, different values - part 2'] = f
 
 exports['Match simple object with simple object, different keys - part 1'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({b:2}, 'DATA2');
@@ -113,7 +113,7 @@ exports['Match simple object with simple object, different keys - part 1'] = fun
 
 exports['Match simple object with simple object, different keys - part 2'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({b:2}, 'DATA2');
@@ -127,7 +127,7 @@ exports['Match simple object with simple object, different keys - part 2'] = fun
 
 exports['Match simple object with simple object, different keys - mismatched values'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({b:2}, 'DATA2');
@@ -141,7 +141,7 @@ exports['Match simple object with simple object, different keys - mismatched val
 
 exports['Match multiple base keys on single large object'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({b:2}, 'DATA2');
@@ -155,7 +155,7 @@ exports['Match multiple base keys on single large object'] = function(test){
 
 exports['Match multiple base keys on single large object, multiple'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({a:1, b:2}, 'DATA2');
@@ -171,7 +171,7 @@ exports['Match multiple base keys on single large object, multiple'] = function(
 
 exports['Match with wildcards'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({a:1, b:'*'}, 'DATA2');
@@ -186,7 +186,7 @@ exports['Match with wildcards'] = function(test){
 
 exports['Match with wildcards, part 2'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({a:1, b:'*'}, 'DATA2');
@@ -202,7 +202,7 @@ exports['Match with wildcards, part 2'] = function(test){
 
 exports['Match on array'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add([1,2,3], 'DATA1');
 
@@ -215,7 +215,7 @@ exports['Match on array'] = function(test){
 
 exports['Match on multiple array'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add([1,2], 'DATA1');
 	tumble.add([1,2,3], 'DATA2');
@@ -230,7 +230,7 @@ exports['Match on multiple array'] = function(test){
 
 exports['Match on multiple array, part 2'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add([1,2,3,4], 'DATA2');
 	tumble.add([1,2,3], 'DATA2');
@@ -245,7 +245,7 @@ exports['Match on multiple array, part 2'] = function(test){
 
 exports['Match on string'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add('STRING', 'DATA1');
 
@@ -258,7 +258,7 @@ exports['Match on string'] = function(test){
 
 exports['Non-Match on string'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add('STRING', 'DATA1');
 
@@ -271,7 +271,7 @@ exports['Non-Match on string'] = function(test){
 
 exports['Match on boolean'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add(true, 'DATA1');
 
@@ -284,7 +284,7 @@ exports['Match on boolean'] = function(test){
 
 exports['Non-Match on boolean'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add(false, 'DATA1');
 
@@ -297,7 +297,7 @@ exports['Non-Match on boolean'] = function(test){
 
 exports['Match on object with boolean'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a: true}, 'DATA1');
 
@@ -310,7 +310,7 @@ exports['Match on object with boolean'] = function(test){
 
 exports['Non-Match on object with boolean'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a: false}, 'DATA1');
 
@@ -323,7 +323,7 @@ exports['Non-Match on object with boolean'] = function(test){
 
 exports['Match on string mixed with objects'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add('STRING', 'DATA1');
 	tumble.add({a:1}, 'DATA2');
@@ -337,7 +337,7 @@ exports['Match on string mixed with objects'] = function(test){
 
 exports['Match on string mixed with objects, part 2'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA2');
 	tumble.add('STRING', 'DATA1');
@@ -351,7 +351,7 @@ exports['Match on string mixed with objects, part 2'] = function(test){
 
 exports['Non-Match on string mixed with objects, with empty object'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA2');
 	tumble.add('STRING', 'DATA1');
@@ -365,7 +365,7 @@ exports['Non-Match on string mixed with objects, with empty object'] = function(
 
 exports['Match on object with nested object'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({b: {a: 1}}, 'DATA1');
 
@@ -378,7 +378,7 @@ exports['Match on object with nested object'] = function(test){
 
 exports['Match on object with nested object, part 2'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({b: {a: 1}, c: 2}, 'DATA1');
 
@@ -391,7 +391,7 @@ exports['Match on object with nested object, part 2'] = function(test){
 
 exports['Match on object with nested object, part 3'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a: {o: {w: 'x'}}}, 'DATA1');
 	tumble.add({b: {a: {w: 'x'}}}, 'DATA2');
@@ -405,7 +405,7 @@ exports['Match on object with nested object, part 3'] = function(test){
 
 exports['Non-Match on object with nested object'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({b: {a: 1}}, 'DATA1');
 
@@ -418,7 +418,7 @@ exports['Non-Match on object with nested object'] = function(test){
 
 exports['Matches returned in order of specificity descending and index ascending'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({a:1, c:3, d:4}, 'DATA2');
@@ -435,7 +435,7 @@ exports['Matches returned in order of specificity descending and index ascending
 
 exports['Get - single'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1}, 'DATA1');
 	tumble.add({a:1, c:3, d:4}, 'DATA2');
@@ -452,7 +452,7 @@ exports['Get - single'] = function(test){
 
 exports['Get - single, multiple values'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1, b:2}, 'DATA1');
 	tumble.add({a:1, b:2}, 'DATA2');
@@ -466,7 +466,7 @@ exports['Get - single, multiple values'] = function(test){
 
 exports['Get - multiple values'] = function(test){
 
-	var tumble = tumbler();
+	var tumble = pinvault();
 
 	tumble.add({a:1, b:2}, 'DATA1');
 	tumble.add({a:1, b:2}, 'DATA2');

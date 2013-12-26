@@ -2,7 +2,7 @@
 (function (context, undefined) {
 	'use strict';
 
-	var tumbler = function tumbler() {
+	var pinvault = function pinvault() {
 
 		var uniqueKeys = {
 			string: '%[String]%',
@@ -405,20 +405,20 @@
 
 	if ( typeof module === 'object' && module && typeof module.exports === 'object' ) {
 		//Running inside node
-		module.exports = tumbler;
+		module.exports = pinvault;
 
 	} else if ( typeof define === 'function' && define.amd ) {
 		//Running inside AMD
-		define([], tumbler);
+		define([], pinvault);
 	} else {
 		//Dunno where we are, add it to the global context with a noConflict
 
-		var previous = context.tumbler;
-		tumbler.noConflict = function () {
-			context.tumbler = previous;
-			return tumbler;
+		var previous = context.pinvault;
+		pinvault.noConflict = function () {
+			context.pinvault = previous;
+			return pinvault;
 		};
-		context.tumbler = tumbler;
+		context.pinvault = pinvault;
 
 	}
 
