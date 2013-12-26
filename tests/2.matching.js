@@ -169,6 +169,36 @@ exports['Match multiple base keys on single large object, multiple'] = function(
 	test.done();
 };
 
+exports['Match with wildcards'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add({a:1}, 'DATA1');
+	tumble.add({a:1, b:'*'}, 'DATA2');
+	tumble.add({a:1, b: 5}, 'DATA3');
+
+	var result = tumble.matchData({a:1, b:2, c:3});
+
+	test.deepEqual(result, ['DATA2','DATA1']);
+
+	test.done();
+};
+
+exports['Match with wildcards, part 2'] = function(test){
+
+	var tumble = tumbler();
+
+	tumble.add({a:1}, 'DATA1');
+	tumble.add({a:1, b:'*'}, 'DATA2');
+	tumble.add({a:1, b: 5}, 'DATA3');
+
+	var result = tumble.matchData({a:1});
+
+	test.deepEqual(result, ['DATA1']);
+
+	test.done();
+};
+
 
 exports['Match on array'] = function(test){
 
