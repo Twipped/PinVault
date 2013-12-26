@@ -193,20 +193,21 @@ exports['Store pattern with an object'] = function (test) {
 			a: {
 				branches: {
 					'%[Object]%': {
-						branches: {},
-						subtree: {
-							branches: {
-								key: {
-									branches: {
-										1: {
-											branches: {
-												value: {
-													branches: {
-														10: {
-															branches: {},
-															data: [{data:'DATA', index: 0}],
-															pattern: '{"a":{"key":1,"value":10}}'
-														}
+						branches: {
+							key: {
+								branches: {
+									1: {
+										branches: {
+											value: {
+												branches: {
+													10: {
+														branches: {
+															'%[ObjectEnd]%': {
+																branches: {},
+																data: [{data:'DATA', index: 0}],
+																pattern: '{"a":{"key":1,"value":10}}'
+															}
+														},
 													}
 												}
 											}
@@ -235,25 +236,32 @@ exports['Store multiple patterns with an object'] = function (test) {
 			a: {
 				branches: {
 					'%[Object]%': {
-						branches: {},
-						subtree: {
-							branches: {
-								key: {
-									branches: {
-										1: {
-											branches: {},
-											data: [{data:'DATA1', index: 0}],
-											pattern: '{"a":{"key":1}}'
-										},
-										2: {
-											branches: {},
-											data: [{data:'DATA2', index: 1}],
-											pattern: '{"a":{"key":2}}'
+
+						branches: {
+							key: {
+								branches: {
+									1: {
+										branches: {
+											'%[ObjectEnd]%': {
+												branches: {},
+												data: [{data:'DATA1', index: 0}],
+												pattern: '{"a":{"key":1}}'
+											}
+										}
+									},
+									2: {
+										branches: {
+											'%[ObjectEnd]%': {
+												branches: {},
+												data: [{data:'DATA2', index: 1}],
+												pattern: '{"a":{"key":2}}'
+											}
 										}
 									}
 								}
 							}
 						}
+
 					}
 				}
 			}
@@ -274,24 +282,23 @@ exports['Store pattern with an object, part 2'] = function (test) {
 						branches: {
 							'%[Object]%': {
 								branches: {
-									b: {
+									key: {
 										branches: {
-											2: {
-												branches: {},
-												data: [{data:'DATA1', index: 0}],
-												pattern: '{"a":{"key":1},"b":2}'
-											}
-										}
-									}
-								},
-								subtree: {
-									branches: {
-										key: {
-											branches: {
-												1: {
-													branches: {},
-													data: [{data:'DATA1', index: 0}],
-													pattern: '{"a":{"key":1},"b":2}'
+											1: {
+												branches: {
+													'%[ObjectEnd]%': {
+														branches: {
+															b: {
+																branches: {
+																	2: {
+																		branches: {},
+																		data: [{data:'DATA1', index: 0}],
+																		pattern: '{"a":{"key":1},"b":2}'
+																	}
+																}
+															}
+														}
+													}
 												}
 											}
 										}

@@ -7,7 +7,8 @@
 		var uniqueKeys = {
 			string: '%[String]%',
 			array:  '%[Array]%',
-			object: '%[Object]%'
+			object: '%[Object]%',
+			objectEnd: '%[ObjectEnd]%'
 		};
 
 		var seed = {
@@ -17,7 +18,7 @@
 		var length = 0;
 		var lastIndex = -1;
 
-		function store(pattern, data, root, originalPattern) {
+		function store(pattern, data, root, originalPattern, subtree) {
 			//if the pattern is not an object, cast it to a string and wrap it in an object under a unique key name
 			if (typeof pattern !== 'object') {
 				var wrapper = {};
@@ -45,12 +46,12 @@
 
 				// if we find another object as the value, we need to create a new subtree
 				// under an [object Object] branch so that we can perform submatches
+				// once we return from that branch, we add an object cap to denote returning to
+				// the previous level
 				if (typeof value === 'object') {
 					trunk = grabBranch(trunk, uniqueKeys.object);
-					if (!trunk.subtree) {
-						trunk.subtree = { branches: {} };
-					}
-					store(value, data, trunk.subtree, originalPattern);
+					trunk = store(value, data, trunk, originalPattern, true);
+					trunk = grabBranch(trunk, uniqueKeys.objectEnd);
 				} else {
 					trunk = grabBranch(trunk, value);
 				}
@@ -68,7 +69,7 @@
 
 			//once the recursion ends, trunk should contain the destination of our stored data
 			//but we don't want to store it if that branch has a subtree (object within object)
-			if (!trunk.subtree) {
+			if (!subtree) {
 				if (trunk.data) {
 					trunk.data.push({data: data, index: lastIndex});
 				} else {
@@ -76,6 +77,8 @@
 				}
 				trunk.pattern = originalPattern;
 			}
+
+			return trunk;
 
 		}
 
