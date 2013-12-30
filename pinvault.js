@@ -409,7 +409,7 @@
 
 	} else if ( typeof define === 'function' && define.amd ) {
 		//Running inside AMD
-		define([], pinvault);
+		define([], function () {return pinvault;});
 	} else {
 		//Dunno where we are, add it to the global context with a noConflict
 
