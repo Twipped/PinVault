@@ -100,12 +100,13 @@ var result = vault.match({a:1, b:2, c:3});
 
 Performs the same search as `.match(input)`, but returns an array of only the data values.
 
-###pinvault.get(key[, all])
+###pinvault.get(key[, all][, fullDetails])
 
 Returns only the values which exactly match the key (no pattern matching).
 
 - key (mixed) - The exact key used to store the value.
 - all (boolean, optional) - If truthy, pinvault will always return an array of all values found on the key (empty array if none found).  If falsy or omitted, `get()` will return the last value stored under that key, or `undefined` if no values were found.
+- fullDetails (boolean, optional) - If truthy, pinvault will return the full details for the entries, instead of just the data stored.
 
 ##Running Unit Tests
 

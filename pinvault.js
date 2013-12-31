@@ -374,6 +374,41 @@
 			return all ? matches : matches.pop();
 		}
 
+		function getAll() {
+			var matches = [];
+
+			function climb(trunk, depth) {
+				if (trunk.data) {
+					trunk.data.forEach(function (dataSet) {
+						matches.push({data: dataSet.data, specificity: depth, index: dataSet.index, pattern: trunk.pattern});
+					});
+				}
+
+				var keys = Object.keys(trunk.branches).sort();
+
+				keys.forEach(function (key) {
+					climb(trunk.branches[key], depth + 1);
+				});
+			}
+
+			climb(seed, 0);
+
+			matches.sort(function (a, b) {
+				if (a.specificity > b.specificity) return -1;
+				if (a.specificity < b.specificity) return 1;
+
+				if (a.index > b.index) return 1;
+				if (a.index < b.index) return -1;
+
+				if (a.data > b.data) return 1;
+				if (a.data < b.data) return -1;
+
+				return 0;
+			});
+
+			return matches;
+		}
+
 		return {
 			add: function (pattern, data) {
 				this.length = ++length;
@@ -387,9 +422,9 @@
 				this.length -= count;
 				return howMany ? count : this;
 			},
-			get: function (pattern, all) {
-				var result = getFromSeed(pattern, all);
-				return all ? result.map(function (d) {return d.data;}) : result && result.data || undefined;
+			get: function (pattern, all, full) {
+				var result = pattern ? getFromSeed(pattern, all) : getAll();
+				return all ? result.map(function (d) {return (full && d) || d.data;}) : (full && result) || (result && result.data) || undefined;
 			},
 			match: function (pattern) {
 				return matchFromSeed(pattern);
